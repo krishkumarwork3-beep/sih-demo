@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IBVAP demo dashboard</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: #0f1115; color: #e8e9ec; margin: 0; display: flex; }
+  .feed { flex: 2; padding: 20px; }
+  .feed img { width: 100%; border-radius: 10px; border: 1px solid #2a2e38; background:#000; }
+  .alerts { flex: 1; padding: 20px; border-left: 1px solid #2a2e38; max-height: 100vh; overflow-y: auto; }
+  h2 { font-weight: 600; font-size: 16px; margin-top: 0; }
+  .alert { padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid #93989f; background: #1a1d24; }
+  .High { border-left-color: #e35a53; }
+  .Medium { border-left-color: #e0a52c; }
+  .Low { border-left-color: #5fb36a; }
+  .meta { font-size: 12px; color: #93989f; }
+  .empty { color: #93989f; font-size: 13px; }
+</style>
+</head>
+<body>
+  <div class="feed">
+    <h2>Live feed</h2>
+    <img id="frame" src="latest_frame.jpg" alt="latest annotated frame">
+  </div>
+  <div class="alerts">
+    <h2>Alerts</h2>
+    <div id="alertList" class="empty">Waiting for alerts…</div>
+  </div>
+
+<script>
+async function refresh() {
+  document.getElementById("frame").src = "latest_frame.jpg?t=" + Date.now();
+  try {
+    const res = await fetch("alerts.json?t=" + Date.now());
+    const alerts = await res.json();
+    const list = document.getElementById("alertList");
+    if (!alerts.length) {
+      list.innerHTML = '<div class="empty">Waiting for alerts…</div>';
+      return;
+    }
+    list.innerHTML = alerts.slice().reverse().map(a => `
+      <div class="alert ${a.severity}">
+        <div><strong>${a.severity}</strong> — ${a.event_type.replace(/_/g, " ")}</div>
+        <div class="meta">track #${a.track_id} · ${a.direction} · ${a.timestamp}</div>
+        <div class="meta">risk score: ${a.risk_score}${a.off_hours ? " (off-hours)" : ""}</div>
+      </div>
+    `).join("");
+  } catch (e) { /* alerts.json not created yet — fine, keep waiting */ }
+}
+setInterval(refresh, 2000);
+refresh();
+</script>
+</body>
+</html>

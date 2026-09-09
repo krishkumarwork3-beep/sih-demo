@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2026-09-09T15:05:56",
+    "track_id": 2,
+    "event_type": "virtual_fence_crossing",
+    "direction": "outbound",
+    "off_hours": false,
+    "risk_score": 30,
+    "severity": "Medium",
+    "snapshot": "snapshots/track2_1788946556.jpg"
+  }
+]
