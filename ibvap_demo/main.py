@@ -23,7 +23,7 @@ FACE_CASCADE = cv2.CascadeClassifier(
 
 try:
     import easyocr
-    OCR_READER = easyocr.Reader(["en"], gpu=False)
+    OCR_READER = easyocr.Reader(["en"], gpu=True)
 except Exception as exc:  # pragma: no cover
     print(f"EasyOCR unavailable ({exc}) — ANPR will be skipped.")
     OCR_READER = None

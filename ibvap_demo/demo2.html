@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IBVAP — Multi-Camera Re-ID Dashboard</title>
+<style>
+  :root{--bg:#0b0f14;--panel:#151b23;--panel2:#10151c;--line:#28313d;--text:#edf1f5;--muted:#8d98a5;--accent:#4da3ff;--ok:#55c77a;--warn:#e3ad45;--danger:#e45d5d;--critical:#ff3f58}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif}
+  button,select{font:inherit} button{cursor:pointer}
+  header{padding:18px 24px 10px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#10161d,#0b0f14)}
+  .top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.title h1{margin:0 0 5px;font-size:20px}.title p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.55;max-width:1050px}
+  .tags{margin-top:9px;display:flex;gap:6px;flex-wrap:wrap}.tag{font-size:10.5px;color:#b8d9ff;border:1px solid #31577a;background:#112338;border-radius:999px;padding:3px 8px}
+  .btn{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:7px;padding:7px 11px;font-size:12px}.btn:hover{border-color:var(--accent)}
+  main{padding:18px 24px 34px;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(430px,1fr);gap:20px;align-items:start}.left,.right{min-width:0}.right{display:flex;flex-direction:column;gap:18px}
+  .box{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:18px}.box h2{font-size:18px;margin:0 0 7px;font-weight:700;letter-spacing:.1px}.sub{font-size:13px;color:var(--muted);margin:0 0 14px;line-height:1.55}
+  .viewer{position:relative;background:#000;border:1px solid var(--line);border-radius:10px;overflow:hidden}.viewer video{display:block;width:100%;height:auto;min-height:260px;max-height:620px;object-fit:contain;background:#000}.quad-overlay{position:absolute;inset:0;pointer-events:none;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+  .quad{border:1px solid rgba(255,255,255,.18);position:relative}.quad span{position:absolute;left:8px;top:7px;padding:3px 6px;border-radius:5px;background:rgba(0,0,0,.65);font-size:10px;font-weight:600}.quad:nth-child(1) span{color:#75b9ff}.quad:nth-child(2) span{color:#72d9a0}.quad:nth-child(3) span{color:#e7bd65}.quad:nth-child(4) span{color:#d79cff}
+  .viewerbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:9px}.viewerbar input[type=file]{display:none}.file-name{font-size:11px;color:var(--muted);flex:1;min-width:180px}.live-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);display:inline-block;box-shadow:0 0 8px var(--ok)}
+  .pipeline{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}.stage{font-size:9.5px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;color:var(--muted)}.stage.active{color:#cfe6ff;border-color:#396c9b;background:#102336}
+  .analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.cam{background:var(--panel);border:1px solid var(--line);border-radius:9px;overflow:hidden}.cam-head{padding:8px 9px;display:flex;justify-content:space-between;gap:7px;align-items:center}.cam-title{font-size:11.5px;font-weight:650}.cam-meta{font-size:9.5px;color:var(--muted);margin-top:2px}.health{font-size:9px;border:1px solid var(--ok);color:var(--ok);border-radius:999px;padding:2px 6px}.health.degraded{border-color:var(--warn);color:var(--warn)}.health.offline{border-color:var(--danger);color:var(--danger)}
+  .cam canvas{display:block;width:100%;aspect-ratio:16/9;background:#000}.cam-foot{padding:7px 9px;display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:9.5px}.mode{color:#b9d9f7}.count{color:var(--text)}
+  .control-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.control-row label{font-size:10.5px;color:var(--muted)}select{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:5px 7px}
+  .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.stat{border:1px solid var(--line);border-radius:11px;padding:13px 14px;background:#0d1218;min-height:82px;display:flex;flex-direction:column;justify-content:center}.stat b{display:block;font-size:26px;line-height:1.05;margin-bottom:8px;font-weight:750}.stat span{font-size:12px;color:#aab4c0;line-height:1.25}
+  #registryList,#alertList{display:flex;flex-direction:column;gap:10px;max-height:520px;overflow:auto;padding-right:6px}.empty{font-size:12px;color:var(--muted);padding:18px;text-align:center;border:1px dashed var(--line);border-radius:10px}
+  .id-card{background:var(--panel);border:1px solid #34404d;border-radius:11px;padding:14px 15px}.id-head{display:flex;align-items:center;gap:9px}.swatch{width:14px;height:14px;border-radius:4px;border:1px solid var(--line);flex:none}.id-title{font-size:16px;font-weight:700;flex:1;color:var(--text)}.auth{font-size:12px;border-radius:7px;padding:6px 10px;background:var(--bg);border:1px solid var(--warn);color:var(--warn);font-weight:600;white-space:nowrap}.auth.yes{border-color:var(--ok);color:var(--ok)}.id-meta{font-size:13px;color:#aab4c0;margin-top:9px;line-height:1.55}.trail{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{font-size:11.5px;padding:5px 8px;border-radius:7px;background:#0d1218;border:1px solid #34404d;color:#d8e0e8}
+  .alert{background:var(--panel);border:1px solid #34404d;border-left:4px solid var(--muted);border-radius:11px;padding:13px 14px}.alert.High{border-left-color:var(--danger)}.alert.Medium{border-left-color:var(--warn)}.alert.Low{border-left-color:var(--ok)}.alert.Critical{border-left-color:var(--critical)}.alert-row{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.sev{font-size:14px;font-weight:750;text-transform:capitalize}.sev.High{color:var(--danger)}.sev.Medium{color:var(--warn)}.sev.Low{color:var(--ok)}.sev.Critical{color:var(--critical)}.risk{font-size:12px;color:#aab4c0;white-space:nowrap}.alert-msg{font-size:14px;line-height:1.5;margin-top:7px;color:#eef2f6}.alert-time{font-size:11.5px;color:#97a3b0;margin-top:7px}.alert-actions{margin-top:10px;display:flex;gap:7px;flex-wrap:wrap}.mini{font-size:12px;padding:6px 9px;border:1px solid #394553;background:var(--bg);color:#b5c0cc;border-radius:7px}.mini:hover{border-color:var(--accent);color:var(--text)}
+
+  #registryList::-webkit-scrollbar,#alertList::-webkit-scrollbar{width:9px}
+  #registryList::-webkit-scrollbar-thumb,#alertList::-webkit-scrollbar-thumb{background:#374351;border-radius:8px}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:9.5px;color:var(--muted);margin-top:8px}.legend i{width:8px;height:8px;display:inline-block;border-radius:2px;margin-right:4px}.blue{background:var(--accent)}.green{background:var(--ok)}.orange{background:var(--warn)}
+  .notice{font-size:10px;line-height:1.45;color:var(--muted);background:#101820;border:1px solid #263b4c;border-radius:7px;padding:8px;margin-top:9px}.notice b{color:#d6e9fa}
+  @media(max-width:1180px){main{grid-template-columns:1fr}.right{display:grid;grid-template-columns:1fr 1fr}.right .box:last-child{grid-column:1/-1}}
+  @media(max-width:680px){main{padding:10px}.analysis-grid{grid-template-columns:1fr}.right{display:flex}.top{flex-direction:column}.viewer video{min-height:200px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <button class="btn" id="resetBtn">Reset demo</button>
+  </div>
+</header>
+
+<main>
+<section class="left">
+  <div class="box">
+    <h2>Multi-camera recording — one video source</h2>
+    <p class="sub">This is the operator-facing DVR view. The file remains a single video; the browser also samples its four quadrants as Camera A–D streams for the prototype pipeline.</p>
+    <div class="viewer">
+      <video id="multiVideo" controls muted playsinline></video>
+      <div class="quad-overlay" aria-hidden="true">
+        <div class="quad"><span>CAM A · TL</span></div><div class="quad"><span>CAM B · TR</span></div>
+        <div class="quad"><span>CAM C · BL</span></div><div class="quad"><span>CAM D · BR</span></div>
+      </div>
+    </div>
+    <div class="viewerbar">
+      <button class="btn" id="uploadBtn">Upload multi-camera video</button>
+      <input id="fileInput" type="file" accept="video/*">
+      <button class="btn" id="playBtn">Play</button>
+      <button class="btn" id="pauseBtn">Pause</button>
+      <span class="live-dot"></span><span class="file-name" id="fileName">No recording loaded. Use the upload button to select a quad/2×2 CCTV recording.</span>
+    </div>
+    <div class="pipeline" id="pipeline">
+      <span class="stage active">1 Camera source</span><span class="stage">2 Registry / tile map</span><span class="stage">3 Stream manager</span><span class="stage">4 Health</span><span class="stage">5 AI pipeline</span><span class="stage">6 Re-ID</span><span class="stage">7 Policy / context</span><span class="stage">8 Event / alert</span><span class="stage">9 Dashboard</span>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:14px">
+    <h2>Camera registry + per-camera analysis</h2>
+    <p class="sub">The single video is treated as four logical camera sources. Every frame is tagged with a camera ID before analysis, matching the architecture's registry/stream-manager concept.</p>
+    <div class="analysis-grid">
+      <div class="cam"><div class="cam-head"><div><div class="cam-title">CAM A · Perimeter Gate</div><div class="cam-meta">TL · Zone 2 · visible</div></div><span class="health" id="health0">Healthy</span></div><canvas id="display0" width="640" height="360"></canvas><div class="cam-foot"><span class="mode" id="status0">Waiting for recording</span><span class="count" id="count0">0 tracks</span></div></div>
+      <div class="cam"><div class="cam-head"><div><div class="cam-title">CAM B · Approach Road</div><div class="cam-meta">TR · Zone 3 · visible</div></div><span class="health" id="health1">Healthy</span></div><canvas id="display1" width="640" height="360"></canvas><div class="cam-foot"><span class="mode" id="status1">Waiting for recording</span><span class="count" id="count1">0 tracks</span></div></div>
+      <div class="cam"><div class="cam-head"><div><div class="cam-title">CAM C · Service Corridor</div><div class="cam-meta">BL · Zone 3 · visible</div></div><span class="health" id="health2">Healthy</span></div><canvas id="display2" width="640" height="360"></canvas><div class="cam-foot"><span class="mode" id="status2">Waiting for recording</span><span class="count" id="count2">0 tracks</span></div></div>
+      <div class="cam"><div class="cam-head"><div><div class="cam-title">CAM D · Restricted Compound</div><div class="cam-meta">BR · Zone 4 · visible</div></div><span class="health" id="health3">Healthy</span></div><canvas id="display3" width="640" height="360"></canvas><div class="cam-foot"><span class="mode" id="status3">Waiting for recording</span><span class="count" id="count3">0 tracks</span></div></div>
+    </div>
+    <div class="control-row" style="margin-top:10px">
+      <label>Health simulation:</label><button class="btn" id="healthBtn">Cycle selected camera health</button>
+      <select id="healthCam"><option value="0">CAM A</option><option value="1">CAM B</option><option value="2">CAM C</option><option value="3">CAM D</option></select>
+      <label style="margin-left:6px">Re-ID threshold:</label><input id="threshold" type="range" min="0.08" max="0.42" value="0.22" step="0.01"><span id="thresholdValue" style="font-size:10px;color:var(--muted)">0.22</span>
+    </div>
+    <div class="legend"><span><i class="blue"></i>local track</span><span><i class="green"></i>matched Global ID</span><span><i class="orange"></i>ambiguous / review</span></div>
+  </div>
+</section>
+
+<aside class="right">
+  <div class="box">
+    <h2>Pipeline status</h2><p class="sub">Live browser MVP counters.</p>
+    <div class="stats"><div class="stat"><b id="statCams">4</b><span>logical cameras</span></div><div class="stat"><b id="statTracks">0</b><span>active tracks</span></div><div class="stat"><b id="statIds">0</b><span>global identities</span></div></div>
+    <div class="stats" style="margin-top:7px"><div class="stat"><b id="statMatches">0</b><span>cross-camera links</span></div><div class="stat"><b id="statAlerts">0</b><span>alerts</span></div><div class="stat"><b id="statHealth">4/4</b><span>healthy cameras</span></div></div>
+  </div>
+
+  <div class="box">
+    <h2>Cross-Camera Global Identities</h2><p class="sub">One Global ID represents one resolved person/object across cameras. Local track IDs may change when a camera loses/recreates a track, but the Global ID is retained through Re-ID matching and movement history.</p>
+    <div id="registryList"><div class="empty">Load a multi-camera recording and press Play.</div></div>
+  </div>
+
+  <div class="box">
+    <h2>Prioritized Alerts</h2><p class="sub">Sorted High → Medium → Low, then newest. Risk uses the implementation-plan weighting for zone, origin and time; behavior is only corroborating.</p>
+    <div id="alertList"><div class="empty">No alerts yet.</div></div>
+  </div>
+</aside>
+</main>
+
+<script>
+'use strict';
+
+// -----------------------------------------------------------------------------
+// IBVAP browser MVP
+// Production architecture in the supplied plan:
+// Cameras -> Registry -> Stream Manager -> Health -> Per-Camera AI -> Re-ID
+// -> Policy/Context -> Event/Alert -> DB/Blockchain/Security -> Dashboard.
+// Here, a single quad-view video supplies four logical camera streams.
+// -----------------------------------------------------------------------------
+
+const QUADS = [
+  {id:'CAM-A', name:'Perimeter Gate', tile:'TL', zone:2, rect:[0,0,0.5,0.5]},
+  {id:'CAM-B', name:'Approach Road', tile:'TR', zone:3, rect:[0.5,0,0.5,0.5]},
+  {id:'CAM-C', name:'Service Corridor', tile:'BL', zone:3, rect:[0,0.5,0.5,0.5]},
+  {id:'CAM-D', name:'Restricted Compound', tile:'BR', zone:4, rect:[0.5,0.5,0.5,0.5]}
+];
+const adjacency = new Set(['0-1','0-2','1-2','1-3','2-3']);
+const video = document.getElementById('multiVideo');
+const fileInput = document.getElementById('fileInput');
+const fileName = document.getElementById('fileName');
+const thresholdEl = document.getElementById('threshold');
+const thresholdValue = document.getElementById('thresholdValue');
+const displays = QUADS.map((_,i)=>document.getElementById('display'+i));
+const cameras = QUADS.map((q,i)=>makeCamera(q,i));
+let objectUrl = null;
+let lastFrameTime = 0;
+let globalFrame = 0;
+let globalIdentities = [];
+let nextGid = 1;
+let alerts = [];
+let crossCameraLinks = 0;
+let raf = 0;
+
+function makeCamera(meta,index){
+  const canvas = displays[index], ctx = canvas.getContext('2d',{willReadFrequently:true});
+  const proc = document.createElement('canvas'); proc.width=96; proc.height=54;
+  const pctx = proc.getContext('2d',{willReadFrequently:true});
+  return {
+    ...meta,index,canvas,ctx,proc,pctx,health:'healthy',prevGray:null,tracks:[],history:[],nextLocalId:1,frameCount:0,
+    lastProcess:0, fpsFrames:0, lastFpsAt:performance.now(),fps:0
+  };
+}
+
+function healthLabel(s){return s[0].toUpperCase()+s.slice(1)}
+function setHealth(cam,state){cam.health=state;const el=document.getElementById('health'+cam.index);el.textContent=healthLabel(state);el.className='health '+(state==='healthy'?'':state);updateStats();}
+function cycleHealth(cam){const seq=['healthy','degraded','offline'];setHealth(cam,seq[(seq.indexOf(cam.health)+1)%seq.length]);}
+
+document.getElementById('healthBtn').onclick=()=>cycleHealth(cameras[+document.getElementById('healthCam').value]);
+thresholdEl.oninput=()=>thresholdValue.textContent=thresholdEl.value;
+document.getElementById('uploadBtn').onclick=()=>fileInput.click();
+fileInput.onchange=()=>{const f=fileInput.files[0];if(!f)return;loadRecording(f)};
+document.getElementById('playBtn').onclick=()=>video.play();
+document.getElementById('pauseBtn').onclick=()=>video.pause();
+document.getElementById('resetBtn').onclick=()=>location.reload();
+
+function loadRecording(file){
+  if(objectUrl)URL.revokeObjectURL(objectUrl);
+  objectUrl=URL.createObjectURL(file); video.src=objectUrl; video.loop=true; fileName.textContent=file.name+' · single quad-view source';
+  globalIdentities=[]; nextGid=1; alerts=[]; crossCameraLinks=0; globalFrame=0;
+  cameras.forEach(c=>{c.prevGray=null;c.tracks=[];c.history=[];c.nextLocalId=1;c.frameCount=0;c.fps=0;setHealth(c,'healthy');document.getElementById('status'+c.index).textContent='Loaded · tile '+c.tile});
+  renderAll();
+  video.play().catch(()=>{});
+}
+
+video.addEventListener('loadedmetadata',()=>{
+  document.querySelectorAll('.stage').forEach((s,i)=>{if(i<3)s.classList.add('active')});
+});
+video.addEventListener('play',()=>document.querySelectorAll('.stage').forEach(s=>s.classList.add('active')));
+
+function tileRect(cam){
+  const w=video.videoWidth,h=video.videoHeight;
+  return [cam.rect[0]*w,cam.rect[1]*h,cam.rect[2]*w,cam.rect[3]*h];
+}
+
+function drawTile(cam){
+  const [sx,sy,sw,sh]=tileRect(cam); if(!sw||!sh)return false;
+  cam.ctx.drawImage(video,sx,sy,sw,sh,0,0,cam.canvas.width,cam.canvas.height);
+  return true;
+}
+
+function grayFrame(cam){
+  cam.pctx.drawImage(cam.canvas,0,0,cam.proc.width,cam.proc.height);
+  const d=cam.pctx.getImageData(0,0,cam.proc.width,cam.proc.height).data;
+  const g=new Uint8ClampedArray(cam.proc.width*cam.proc.height);
+  for(let i=0;i<g.length;i++){const o=i*4;g[i]=0.299*d[o]+0.587*d[o+1]+0.114*d[o+2]}
+  return g;
+}
+
+function components(cam,cur){
+  if(!cam.prevGray)return [];
+  const w=cam.proc.width,h=cam.proc.height, active=new Uint8Array(w*h);
+  const threshold=cam.health==='degraded'?65:25;
+  for(let i=0;i<cur.length;i++) if(Math.abs(cur[i]-cam.prevGray[i])>threshold)active[i]=1;
+  const seen=new Uint8Array(w*h),out=[];
+  for(let i=0;i<active.length;i++){
+    if(!active[i]||seen[i])continue;
+    const stack=[i];seen[i]=1;let minX=w,maxX=0,minY=h,maxY=0,n=0;
+    while(stack.length){const k=stack.pop(),x=k%w,y=(k/w)|0;n++;minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);
+      const ns=[k-1,k+1,k-w,k+w];
+      for(const nk of ns){if(nk<0||nk>=w*h)continue;const nx=nk%w,ny=(nk/w)|0;if(Math.abs(nx-x)+Math.abs(ny-y)!==1)continue;if(active[nk]&&!seen[nk]){seen[nk]=1;stack.push(nk)}}
+    }
+    if(n>=7 && (maxX-minX+1)*(maxY-minY+1)>=12){out.push({x1:minX/w*cam.canvas.width,y1:minY/h*cam.canvas.height,x2:(maxX+1)/w*cam.canvas.width,y2:(maxY+1)/h*cam.canvas.height})}
+  }
+  // Limit noisy blobs; largest motion regions are most useful for this browser stand-in.
+  out.sort((a,b)=>(b.x2-b.x1)*(b.y2-b.y1)-(a.x2-a.x1)*(a.y2-a.y1));
+  return out.slice(0,5);
+}
+
+function appearance(cam,tr){
+  const x=Math.max(0,Math.floor(tr.x1)),y=Math.max(0,Math.floor(tr.y1));
+  const w=Math.max(1,Math.min(cam.canvas.width-x,Math.floor(tr.x2-tr.x1))),h=Math.max(1,Math.min(cam.canvas.height-y,Math.floor(tr.y2-tr.y1)));
+  let r=0,g=0,b=0,n=0;
+  try{const d=cam.ctx.getImageData(x,y,w,h).data;for(let i=0;i<d.length;i+=4){r+=d[i];g+=d[i+1];b+=d[i+2];n++}}catch(e){}
+  if(n){tr.color=[r/n,g/n,b/n]}
+  tr.aspect=(tr.y2-tr.y1)/Math.max(1,tr.x2-tr.x1);
+  tr.area=((tr.x2-tr.x1)*(tr.y2-tr.y1))/(cam.canvas.width*cam.canvas.height);
+}
+
+function emb(tr){return [tr.color[0]/255,tr.color[1]/255,tr.color[2]/255,Math.min(tr.aspect,4)/4,Math.min(tr.area*8,1)]}
+function dist(a,b){const A=emb(a),B=emb(b);let s=0;for(let i=0;i<A.length;i++)s+=(A[i]-B[i])**2;return Math.sqrt(s)}
+function adjacent(a,b){return a===b || adjacency.has(a+'-'+b) || adjacency.has(b+'-'+a)}
+
+function processCamera(cam){
+  if(video.readyState<2 || !video.videoWidth || cam.health==='offline')return;
+  if(!drawTile(cam))return;
+  const cur=grayFrame(cam); const blobs=components(cam,cur); cam.prevGray=cur;
+  for(const b of blobs){b.cx=(b.x1+b.x2)/2;b.cy=(b.y1+b.y2)/2;let best=null,bestD=55;for(const tr of cam.tracks){const d=Math.hypot(tr.cx-b.cx,tr.cy-b.cy);if(d<bestD){bestD=d;best=tr}}
+    if(best){Object.assign(best,b);best.lastSeen=cam.frameCount;best.seen++;appearance(cam,best)}
+    else{const tr={id:cam.nextLocalId++,...b,firstSeen:cam.frameCount,lastSeen:cam.frameCount,seen:1,gid:null,ambiguous:false,pendingFrames:0,color:[128,128,128],aspect:1,area:.01};appearance(cam,tr);cam.tracks.push(tr)}
+  }
+  const active=[];
+  for(const tr of cam.tracks){if(cam.frameCount-tr.lastSeen<10)active.push(tr);else{cam.history.push({...tr,camId:cam.index});if(cam.history.length>80)cam.history.shift()}}
+  cam.tracks=active;
+  drawTracks(cam);
+  cam.frameCount++;cam.fpsFrames++;
+  const now=performance.now();if(now-cam.lastFpsAt>1000){cam.fps=cam.fpsFrames*1000/(now-cam.lastFpsAt);cam.fpsFrames=0;cam.lastFpsAt=now}
+  document.getElementById('status'+cam.index).textContent=(cam.health==='healthy'?'Streaming':'Stream '+cam.health)+' · '+cam.fps.toFixed(0)+' fps';
+  document.getElementById('count'+cam.index).textContent=cam.tracks.length+' tracks';
+}
+
+function drawTracks(cam){
+  for(const tr of cam.tracks){if(tr.lastSeen!==cam.frameCount)continue;const col=tr.gid?'#55c77a':tr.ambiguous?'#e3ad45':'#4da3ff';cam.ctx.strokeStyle=col;cam.ctx.lineWidth=2;cam.ctx.strokeRect(tr.x1,tr.y1,tr.x2-tr.x1,tr.y2-tr.y1);cam.ctx.fillStyle=col;cam.ctx.font='12px Segoe UI';cam.ctx.fillText(tr.gid?'G#'+tr.gid:'L#'+tr.id,tr.x1,Math.max(13,tr.y1-5))}
+}
+
+function findGid(gid){return globalIdentities.find(x=>x.gid===gid)}
+function createIdentity(tr,cam){
+  const gid=nextGid++;
+  const c=tr.color.map(Math.round);
+  const ident={
+    gid,
+    colorCss:`rgb(${c[0]},${c[1]},${c[2]})`,
+    seen:new Map(),
+    authorized:false,
+    history:[],
+    provisional:false,
+    prototypes:[{color:[...tr.color],aspect:tr.aspect,area:tr.area}],
+    lastSeenAt:performance.now(),
+    lastCamera:cam.index,
+    cameraLinks:new Set()
+  };
+  globalIdentities.push(ident);
+  bindIdentity(ident,tr,cam,0,{announce:false,newIdentity:true});
+  return gid;
+}
+
+function identityDistance(ident,tr){
+  const protos=ident.prototypes?.length?ident.prototypes:[ident.prototype||{color:tr.color,aspect:tr.aspect,area:tr.area}];
+  let best=Infinity;
+  for(const proto of protos){
+    const A=[proto.color[0]/255,proto.color[1]/255,proto.color[2]/255,Math.min(proto.aspect,4)/4,Math.min(proto.area*8,1)];
+    const B=emb(tr);
+    let s=0;for(let i=0;i<A.length;i++)s+=(A[i]-B[i])**2;
+    best=Math.min(best,Math.sqrt(s));
+  }
+  return best;
+}
+
+function identityHasActiveTrackInCamera(gid,camIndex){
+  return cameras[camIndex].tracks.some(t=>t.gid===gid && t.lastSeen===cameras[camIndex].frameCount);
+}
+
+function bindIdentity(ident,tr,cam,d,opts={announce:true,newIdentity:false}){
+  if(!ident)return;
+  const wasSeenInCamera=ident.seen.has(cam.index);
+  const previousCamera=ident.lastCamera;
+
+  tr.gid=ident.gid;
+  tr.ambiguous=false;
+  if(!ident.prototypes)ident.prototypes=[];
+  ident.prototypes.push({color:[...tr.color],aspect:tr.aspect,area:tr.area});
+  if(ident.prototypes.length>12)ident.prototypes.shift();
+
+  ident.lastSeenAt=performance.now();
+  ident.lastCamera=cam.index;
+
+  const t=performance.now();
+  ident.seen.set(cam.index,{name:cam.name,zone:cam.zone,t,updated:t});
+  ident.history.push({camera:cam.id,zone:cam.zone,timestamp:Date.now(),localTrackId:tr.id});
+  if(ident.history.length>200)ident.history.shift();
+  if(previousCamera!==cam.index && !wasSeenInCamera){
+    const linkKey=`${ident.gid}:${cam.index}`;
+    if(!ident.cameraLinks.has(linkKey)){
+      ident.cameraLinks.add(linkKey);
+      crossCameraLinks++;
+      if(opts.announce && opts.alertType !== 'silent'){
+        const confidence=Math.max(0,Math.min(99,Math.round((1-d/Math.max(.001,+thresholdEl.value))*100)));
+        pushAlert('reid_match','Low',0,`Global ID #${ident.gid} matched from ${QUADS[previousCamera].id} to ${cam.id} · appearance confidence ~${confidence}%.`);
+      }
+    }
+  }
+  renderRegistry();
+}
+
+function matchingSweep(){
+  const threshold=+thresholdEl.value;
+  const margin=.045;
+  const now=performance.now();
+  const identityFreshnessMs=12000;
+  const newIdentityDelaySweeps=3;
+
+  for(let i=0;i<cameras.length;i++){
+    const src=cameras[i];
+    if(src.health==='offline')continue;
+
+    for(const tr of src.tracks.filter(t=>!t.gid&&t.seen>=3)){
+      const candidates=[];
+      for(const ident of globalIdentities){
+        if(identityHasActiveTrackInCamera(ident.gid,i))continue;
+        if(!adjacent(i,ident.lastCamera))continue;
+        if(now-ident.lastSeenAt>identityFreshnessMs)continue;
+        const d=identityDistance(ident,tr);
+        candidates.push({ident,d});
+      }
+      candidates.sort((a,b)=>a.d-b.d);
+      const best=candidates[0], second=candidates[1];
+
+      if(best && best.d<threshold){
+        if(second && second.d-best.d<margin){
+          if(!tr.ambiguous){
+            tr.ambiguous=true;
+            pushAlert('ambiguous','Medium',5,`${src.name}: local track #${tr.id} is ambiguous between Global ID #${best.ident.gid} and Global ID #${second.ident.gid}. Auto-merge withheld; operator review required.`);
+          }
+          continue;
+        }
+        bindIdentity(best.ident,tr,src,best.d,{announce:false});
+        continue;
+      }
+
+      tr.pendingFrames=(tr.pendingFrames||0)+1;
+      if(tr.pendingFrames<newIdentityDelaySweeps)continue;
+      createIdentity(tr,src);
+    }
+  }
+}
+
+function zoneSensitivity(zone){return zone>=4?1.4:zone===3?1:.6}
+function timeFactor(){const h=new Date().getHours();return (h<6||h>=18)?1.3:.7}
+function checkPolicyAndOrigin(){
+  const tf=timeFactor();
+  for(const cam of cameras){if(cam.health==='offline'||cam.zone<4)continue;
+    const other=cameras.filter(x=>x.index!==cam.index&&adjacent(cam.index,x.index));
+    for(const tr of cam.tracks.filter(t=>t.lastSeen===cam.frameCount)){
+      if(tr.gid){const ident=findGid(tr.gid);if(!ident)continue;const hasLower=[...ident.seen.values()].some(v=>v.zone<cam.zone);if(hasLower&&!ident.authorized&&!tr.zoneFlagged){tr.zoneFlagged=true;const risk=Math.round(30*zoneSensitivity(cam.zone)*tf);pushAlert('zone_violation',risk>=55?'High':'Medium',risk,`Global ID #${tr.gid} entered ${cam.name} (Zone ${cam.zone}) with no authorization on record after being seen in a lower-clearance zone.`)}}
+      else if(!tr.originFlagged && tr.seen>12){tr.originFlagged=true;const degraded=other.some(x=>x.health==='degraded'),offline=other.some(x=>x.health==='offline');if(offline){pushAlert('sensor_gap','Low',0,`${cam.name}: no traceable source path, but an adjacent camera is offline; origin flag suppressed to a sensor-gap note.`)}else{const risk=Math.round(25*zoneSensitivity(cam.zone)*tf*(degraded?.5:1));pushAlert('no_traceable_origin',degraded?'Medium':'High',risk,`${cam.name}: local track #${tr.id} has no traceable path through the adjacent monitored cameras; ${degraded?'down-weighted because a candidate camera is degraded.':'camera health is currently healthy.'}`)}}
+    }
+  }
+}
+
+function addBehaviorContext(){
+  for(const ident of globalIdentities){if(!ident.history.length)continue;const latest=ident.history[ident.history.length-1];const cam=cameras.find(c=>c.id===latest.camera);if(!cam)continue;const behavior=ident.history.length>=3?2:0;const identityFlag=alerts.some(a=>a.gid===ident.gid&&a.type!=='reid_match');if(behavior&&!identityFlag){/* capped at <=5 by plan */}}
+}
+
+const rank={Critical:4,High:3,Medium:2,Low:1};
+function pushAlert(type,severity,score,message,gid=null){alerts.unshift({type,severity,score,message,gid,ts:Date.now(),time:new Date().toLocaleTimeString()});alerts=alerts.slice(0,80);renderAlerts();updateStats()}
+function renderAlerts(){const el=document.getElementById('alertList');if(!alerts.length){el.innerHTML='<div class="empty">No alerts yet.</div>';return}const list=alerts.slice().sort((a,b)=>(rank[b.severity]-rank[a.severity])||b.ts-a.ts);el.innerHTML=list.map((a,i)=>`<div class="alert ${a.severity}"><div class="alert-row"><span class="sev ${a.severity}">${a.severity} · ${a.type.replace(/_/g,' ')}</span><span class="risk">risk ${a.score}</span></div><div class="alert-msg">${escapeHtml(a.message)}</div><div class="alert-time">${a.time}${a.override?` · Operator: ${escapeHtml(a.override)}`:''}</div><div class="alert-actions"><button class="mini" data-action="confirm" data-index="${i}">Confirm</button><button class="mini" data-action="false" data-index="${i}">Mark false positive</button><button class="mini" data-action="inconclusive" data-index="${i}">Inconclusive</button></div></div>`).join('');
+  el.querySelectorAll('button[data-action]').forEach(btn=>btn.onclick=()=>overrideAlert(list[+btn.dataset.index],btn.dataset.action));
+}
+function overrideAlert(a,action){
+  if(!a)return;
+  a.override=action;
+  a.overrideTime=new Date().toLocaleTimeString();
+  renderAlerts();
+  updateStats();
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function toggleAuth(gid){const ident=findGid(gid);if(!ident)return;ident.authorized=!ident.authorized;renderRegistry();}
+window.toggleAuth=toggleAuth;
+function renderRegistry(){const el=document.getElementById('registryList');if(!globalIdentities.length){el.innerHTML='<div class="empty">No global identities yet. Re-ID links will appear when the same person/object is observed in an adjacent camera.</div>';return}el.innerHTML=globalIdentities.slice().reverse().map(i=>{const ordered=[...new Map(i.history.map(h=>[h.camera+'|'+h.timestamp,h])).values()];const path=[];for(const h of ordered){if(!path.length||path[path.length-1]!==h.camera)path.push(h.camera)}const cams=path.length?path.map(cid=>{const q=QUADS.find(x=>x.id===cid);return q?q.name+' · Z'+q.zone:cid}).join(' → '):'—';const localTrail=i.history.slice(-8).map(h=>{const q=QUADS.find(x=>x.id===h.camera);return `<span class="chip">${h.camera} · L#${h.localTrackId}</span>`}).join('');return `<div class="id-card"><div class="id-head"><span class="swatch" style="background:${i.colorCss}"></span><span class="id-title">Global ID #${i.gid}</span><button class="auth ${i.authorized?'yes':''}" onclick="toggleAuth(${i.gid})">${i.authorized?'Authorized':'Unauthorized'}</button></div><div class="id-meta"><b>Same identity across cameras:</b> ${cams}</div><div class="id-meta">Recent local tracks linked to this Global ID:</div><div class="trail">${localTrail||'<span class="chip">No local track history</span>'}</div></div>`}).join('')}
+
+function updateStats(){const tracks=cameras.reduce((n,c)=>n+c.tracks.length,0),healthy=cameras.filter(c=>c.health==='healthy').length;document.getElementById('statTracks').textContent=tracks;document.getElementById('statIds').textContent=globalIdentities.length;document.getElementById('statMatches').textContent=crossCameraLinks;document.getElementById('statAlerts').textContent=alerts.length;document.getElementById('statHealth').textContent=healthy+'/4'}
+function renderAll(){renderRegistry();renderAlerts();updateStats()}
+
+function tick(now){raf=requestAnimationFrame(tick);if(video.readyState>=2&&!video.paused&&!video.ended){for(const cam of cameras)processCamera(cam);globalFrame++;if(globalFrame%10===0){matchingSweep();checkPolicyAndOrigin();addBehaviorContext();renderRegistry();updateStats()}}else if(video.readyState>=2){for(const cam of cameras)if(cam.health!=='offline')drawTile(cam)}
+  if(now-lastFrameTime>1500){lastFrameTime=now;updateStats()}}
+renderAll();requestAnimationFrame(tick);
+</script>
+</body>
+</html>
