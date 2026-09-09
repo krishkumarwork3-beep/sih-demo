@@ -11,6 +11,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 WEB_DIR = os.path.join(BASE_DIR, "web")
 SNAPSHOT_DIR = os.path.join(WEB_DIR, "snapshots")
 ALERTS_PATH = os.path.join(WEB_DIR, "alerts.json")
+DETECTIONS_PATH = os.path.join(WEB_DIR, "detections.json")
 FRAME_PATH = os.path.join(WEB_DIR, "latest_frame.jpg")
 
 PERSON_CLASS = 0
@@ -52,6 +53,18 @@ def save_alerts(alerts):
         json.dump(alerts[-50:], f, indent=2)
 
 
+def load_detections():
+    if os.path.exists(DETECTIONS_PATH):
+        with open(DETECTIONS_PATH) as f:
+            return json.load(f)
+    return []
+
+
+def save_detections(detections):
+    with open(DETECTIONS_PATH, "w") as f:
+        json.dump(detections[-30:], f, indent=2)
+
+
 def compute_risk(off_hours):
     # Simplified stand-in for Step 29's weighted formula.
     zone_violation = 1  # every fence crossing counts as one, for demo purposes
@@ -91,11 +104,16 @@ def main():
     parser.add_argument("video", help="Path to sample video, or 0 for webcam")
     parser.add_argument("--config", default="config.json")
     parser.add_argument("--model", default="yolov8n.pt", help="Ultralytics model weights")
+    parser.add_argument("--force-off-hours", action="store_true",
+                         help="Treat every frame as off-hours, so you can show severity "
+                              "escalate on demand instead of waiting for real nighttime")
     args = parser.parse_args()
 
     os.makedirs(SNAPSHOT_DIR, exist_ok=True)
     if not os.path.exists(ALERTS_PATH):
         save_alerts([])
+    if not os.path.exists(DETECTIONS_PATH):
+        save_detections([])
 
     config = load_config(args.config)
     fence = config.get("fence")
@@ -110,6 +128,10 @@ def main():
     model = YOLO(args.model)
     prev_side = {}
     alerts = load_alerts()
+    detections = load_detections()
+    face_last_logged = {}
+    plate_last_logged = {}
+    LOG_COOLDOWN_SEC = 4  # avoid spamming the same track's face/plate every frame
 
     print("Running. Press Ctrl+C to stop.")
     try:
@@ -128,7 +150,7 @@ def main():
             )[0]
 
             annotated = frame.copy()
-            off_hours = is_off_hours(config)
+            off_hours = args.force_off_hours or is_off_hours(config)
 
             if results.boxes.id is not None:
                 boxes = results.boxes.xyxy.cpu().numpy().astype(int)
@@ -151,6 +173,16 @@ def main():
                             if len(faces) > 0:
                                 cv2.putText(annotated, "face", (x1, y2 + 16),
                                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 200, 0), 1)
+                                now = time.time()
+                                if track_id not in face_last_logged or now - face_last_logged[track_id] > LOG_COOLDOWN_SEC:
+                                    detections.append({
+                                        "timestamp": datetime.now().isoformat(timespec="seconds"),
+                                        "type": "face",
+                                        "track_id": int(track_id),
+                                        "detail": "face detected",
+                                    })
+                                    save_detections(detections)
+                                    face_last_logged[track_id] = now
 
                         if fence:
                             a, b = fence[0], fence[1]
@@ -183,6 +215,16 @@ def main():
                         if plate:
                             cv2.putText(annotated, f"plate: {plate}", (x1, y2 + 16),
                                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 150, 255), 1)
+                            now = time.time()
+                            if track_id not in plate_last_logged or now - plate_last_logged[track_id] > LOG_COOLDOWN_SEC:
+                                detections.append({
+                                    "timestamp": datetime.now().isoformat(timespec="seconds"),
+                                    "type": "plate",
+                                    "track_id": int(track_id),
+                                    "detail": plate,
+                                })
+                                save_detections(detections)
+                                plate_last_logged[track_id] = now
 
             if fence:
                 cv2.line(annotated, tuple(fence[0]), tuple(fence[1]), (0, 0, 255), 2)

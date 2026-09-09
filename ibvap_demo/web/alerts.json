@@ -8,5 +8,75 @@
     "risk_score": 30,
     "severity": "Medium",
     "snapshot": "snapshots/track2_1788946556.jpg"
+  },
+  {
+    "timestamp": "2026-09-09T15:18:22",
+    "track_id": 2,
+    "event_type": "virtual_fence_crossing",
+    "direction": "outbound",
+    "off_hours": false,
+    "risk_score": 30,
+    "severity": "Medium",
+    "snapshot": "snapshots/track2_1788947302.jpg"
+  },
+  {
+    "timestamp": "2026-09-09T15:27:41",
+    "track_id": 2,
+    "event_type": "virtual_fence_crossing",
+    "direction": "outbound",
+    "off_hours": false,
+    "risk_score": 30,
+    "severity": "Medium",
+    "snapshot": "snapshots/track2_1788947861.jpg"
+  },
+  {
+    "timestamp": "2026-09-09T15:29:31",
+    "track_id": 2,
+    "event_type": "virtual_fence_crossing",
+    "direction": "outbound",
+    "off_hours": true,
+    "risk_score": 40,
+    "severity": "High",
+    "snapshot": "snapshots/track2_1788947971.jpg"
+  },
+  {
+    "timestamp": "2026-09-09T15:39:44",
+    "track_id": 2,
+    "event_type": "virtual_fence_crossing",
+    "direction": "outbound",
+    "off_hours": false,
+    "risk_score": 30,
+    "severity": "Medium",
+    "snapshot": "snapshots/track2_1788948584.jpg"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:09",
+    "track_id": 3,
+    "event_type": "virtual_fence_crossing",
+    "direction": "inbound",
+    "off_hours": false,
+    "risk_score": 30,
+    "severity": "Medium",
+    "snapshot": "snapshots/track3_1788948849.jpg"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:44",
+    "track_id": 136,
+    "event_type": "virtual_fence_crossing",
+    "direction": "outbound",
+    "off_hours": false,
+    "risk_score": 30,
+    "severity": "Medium",
+    "snapshot": "snapshots/track136_1788948884.jpg"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:12",
+    "track_id": 66,
+    "event_type": "virtual_fence_crossing",
+    "direction": "inbound",
+    "off_hours": false,
+    "risk_score": 30,
+    "severity": "Medium",
+    "snapshot": "snapshots/track66_1788948912.jpg"
   }
 ]
