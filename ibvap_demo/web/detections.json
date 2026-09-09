@@ -1,0 +1,182 @@
+[
+  {
+    "timestamp": "2026-09-09T15:44:39",
+    "type": "face",
+    "track_id": 43,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:40",
+    "type": "face",
+    "track_id": 66,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:41",
+    "type": "face",
+    "track_id": 187,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:42",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:45",
+    "type": "face",
+    "track_id": 66,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:46",
+    "type": "face",
+    "track_id": 187,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:46",
+    "type": "face",
+    "track_id": 179,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:47",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:51",
+    "type": "face",
+    "track_id": 136,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:52",
+    "type": "plate",
+    "track_id": 8,
+    "detail": "2"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:54",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:55",
+    "type": "face",
+    "track_id": 66,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:58",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:44:59",
+    "type": "face",
+    "track_id": 179,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:02",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:04",
+    "type": "face",
+    "track_id": 136,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:07",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:07",
+    "type": "face",
+    "track_id": 179,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:09",
+    "type": "face",
+    "track_id": 136,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:11",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:13",
+    "type": "face",
+    "track_id": 179,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:14",
+    "type": "face",
+    "track_id": 209,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:16",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:18",
+    "type": "face",
+    "track_id": 179,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:19",
+    "type": "face",
+    "track_id": 209,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:20",
+    "type": "face",
+    "track_id": 136,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:21",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:27",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:30",
+    "type": "face",
+    "track_id": 179,
+    "detail": "face detected"
+  },
+  {
+    "timestamp": "2026-09-09T15:45:33",
+    "type": "face",
+    "track_id": 140,
+    "detail": "face detected"
+  }
+]
