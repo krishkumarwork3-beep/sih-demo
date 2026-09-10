@@ -13,9 +13,13 @@ SNAPSHOT_DIR = os.path.join(WEB_DIR, "snapshots")
 ALERTS_PATH = os.path.join(WEB_DIR, "alerts.json")
 DETECTIONS_PATH = os.path.join(WEB_DIR, "detections.json")
 FRAME_PATH = os.path.join(WEB_DIR, "latest_frame.jpg")
+TRACKER_CONFIG = os.path.join(BASE_DIR, "custom_bytetrack.yaml")
 
 PERSON_CLASS = 0
 VEHICLE_CLASSES = {2, 3, 5, 7}  # car, motorcycle, bus, truck (COCO ids)
+
+BOX_COLOR_NORMAL = (0, 200, 0)     # green
+BOX_COLOR_ALERT = (0, 0, 255)      # red — permanent once this track crosses the fence
 
 FACE_CASCADE = cv2.CascadeClassifier(
     cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
@@ -84,6 +88,17 @@ def is_off_hours(config):
     return not (window["start_hour"] <= hour < window["end_hour"])
 
 
+def draw_outlined_text(img, text, origin, scale=1.1, thickness=2,
+                        text_color=(255, 255, 255), outline_color=(0, 0, 0),
+                        outline_thickness=3):
+    """Draw text with a solid outline so it stays readable over any background."""
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    cv2.putText(img, text, origin, font, scale, outline_color,
+                thickness + outline_thickness, cv2.LINE_AA)
+    cv2.putText(img, text, origin, font, scale, text_color,
+                thickness, cv2.LINE_AA)
+
+
 def read_plate(frame, box):
     if OCR_READER is None:
         return None
@@ -110,10 +125,16 @@ def main():
     args = parser.parse_args()
 
     os.makedirs(SNAPSHOT_DIR, exist_ok=True)
-    if not os.path.exists(ALERTS_PATH):
-        save_alerts([])
-    if not os.path.exists(DETECTIONS_PATH):
-        save_detections([])
+
+    # Fresh run = fresh dashboard: wipe out whatever the previous run left behind
+    # so old alerts/detections/snapshots don't linger when you reload localhost.
+    for old_snap in os.listdir(SNAPSHOT_DIR):
+        try:
+            os.remove(os.path.join(SNAPSHOT_DIR, old_snap))
+        except OSError:
+            pass
+    save_alerts([])
+    save_detections([])
 
     config = load_config(args.config)
     fence = config.get("fence")
@@ -127,10 +148,11 @@ def main():
 
     model = YOLO(args.model)
     prev_side = {}
-    alerts = load_alerts()
-    detections = load_detections()
+    alerts = []       # start empty every run — no stale alerts from a previous session
+    detections = []   # same for the recognition log
     face_last_logged = {}
     plate_last_logged = {}
+    crossed_ids = set()  # track_ids that have ever crossed the fence — stay red for good
     LOG_COOLDOWN_SEC = 4  # avoid spamming the same track's face/plate every frame
 
     print("Running. Press Ctrl+C to stop.")
@@ -144,7 +166,7 @@ def main():
             results = model.track(
                 frame,
                 persist=True,
-                tracker="bytetrack.yaml",
+                tracker=TRACKER_CONFIG,
                 classes=list({PERSON_CLASS} | VEHICLE_CLASSES),
                 verbose=False,
             )[0]
@@ -161,9 +183,6 @@ def main():
                     x1, y1, x2, y2 = box
                     cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
                     label = "person" if cls == PERSON_CLASS else "vehicle"
-                    cv2.rectangle(annotated, (x1, y1), (x2, y2), (0, 200, 0), 2)
-                    cv2.putText(annotated, f"{label} #{track_id}", (x1, y1 - 8),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 200, 0), 1)
 
                     if cls == PERSON_CLASS:
                         crop = frame[max(y1, 0):y2, max(x1, 0):x2]
@@ -171,8 +190,8 @@ def main():
                             gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
                             faces = FACE_CASCADE.detectMultiScale(gray, 1.1, 5)
                             if len(faces) > 0:
-                                cv2.putText(annotated, "face", (x1, y2 + 16),
-                                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 200, 0), 1)
+                                draw_outlined_text(annotated, "face", (x1, y2 + 16),
+                                                    text_color=(255, 200, 0))
                                 now = time.time()
                                 if track_id not in face_last_logged or now - face_last_logged[track_id] > LOG_COOLDOWN_SEC:
                                     detections.append({
@@ -207,14 +226,22 @@ def main():
                                 alerts.append(alert)
                                 save_alerts(alerts)
                                 print(f"ALERT: {alert}")
+                                crossed_ids.add(track_id)  # box for this track stays red from now on
                             if sign != 0:
                                 prev_side[track_id] = sign
 
-                    elif cls in VEHICLE_CLASSES:
+                    # Box turns red the moment this track crosses the fence, and stays
+                    # red for the rest of the run (even if it crosses back).
+                    box_color = BOX_COLOR_ALERT if track_id in crossed_ids else BOX_COLOR_NORMAL
+
+                    cv2.rectangle(annotated, (x1, y1), (x2, y2), box_color, 2)
+                    draw_outlined_text(annotated, f"{label} #{track_id}", (x1, max(y1 - 8, 12)))
+
+                    if cls in VEHICLE_CLASSES:
                         plate = read_plate(frame, (x1, y1, x2, y2))
                         if plate:
-                            cv2.putText(annotated, f"plate: {plate}", (x1, y2 + 16),
-                                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 150, 255), 1)
+                            draw_outlined_text(annotated, f"plate: {plate}", (x1, y2 + 16),
+                                                text_color=(0, 150, 255))
                             now = time.time()
                             if track_id not in plate_last_logged or now - plate_last_logged[track_id] > LOG_COOLDOWN_SEC:
                                 detections.append({

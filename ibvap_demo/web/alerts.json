@@ -1,252 +1,92 @@
 [
   {
-    "timestamp": "2026-09-09T15:05:56",
-    "track_id": 2,
-    "event_type": "virtual_fence_crossing",
-    "direction": "outbound",
-    "off_hours": false,
-    "risk_score": 30,
-    "severity": "Medium",
-    "snapshot": "snapshots/track2_1788946556.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T15:18:22",
-    "track_id": 2,
-    "event_type": "virtual_fence_crossing",
-    "direction": "outbound",
-    "off_hours": false,
-    "risk_score": 30,
-    "severity": "Medium",
-    "snapshot": "snapshots/track2_1788947302.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T15:27:41",
-    "track_id": 2,
-    "event_type": "virtual_fence_crossing",
-    "direction": "outbound",
-    "off_hours": false,
-    "risk_score": 30,
-    "severity": "Medium",
-    "snapshot": "snapshots/track2_1788947861.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T15:29:31",
-    "track_id": 2,
-    "event_type": "virtual_fence_crossing",
-    "direction": "outbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track2_1788947971.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T15:39:44",
-    "track_id": 2,
-    "event_type": "virtual_fence_crossing",
-    "direction": "outbound",
-    "off_hours": false,
-    "risk_score": 30,
-    "severity": "Medium",
-    "snapshot": "snapshots/track2_1788948584.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T15:44:09",
-    "track_id": 3,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": false,
-    "risk_score": 30,
-    "severity": "Medium",
-    "snapshot": "snapshots/track3_1788948849.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T15:44:44",
-    "track_id": 136,
-    "event_type": "virtual_fence_crossing",
-    "direction": "outbound",
-    "off_hours": false,
-    "risk_score": 30,
-    "severity": "Medium",
-    "snapshot": "snapshots/track136_1788948884.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T15:45:12",
-    "track_id": 66,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": false,
-    "risk_score": 30,
-    "severity": "Medium",
-    "snapshot": "snapshots/track66_1788948912.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T19:00:15",
+    "timestamp": "2026-09-11T04:14:31",
     "track_id": 3,
     "event_type": "virtual_fence_crossing",
     "direction": "inbound",
     "off_hours": true,
     "risk_score": 40,
     "severity": "High",
-    "snapshot": "snapshots/track3_1788960615.jpg"
+    "snapshot": "snapshots/track3_1789080271.jpg"
   },
   {
-    "timestamp": "2026-09-09T19:01:10",
-    "track_id": 103,
+    "timestamp": "2026-09-11T04:14:47",
+    "track_id": 13,
+    "event_type": "virtual_fence_crossing",
+    "direction": "inbound",
+    "off_hours": true,
+    "risk_score": 40,
+    "severity": "High",
+    "snapshot": "snapshots/track13_1789080287.jpg"
+  },
+  {
+    "timestamp": "2026-09-11T04:14:51",
+    "track_id": 6,
+    "event_type": "virtual_fence_crossing",
+    "direction": "inbound",
+    "off_hours": true,
+    "risk_score": 40,
+    "severity": "High",
+    "snapshot": "snapshots/track6_1789080291.jpg"
+  },
+  {
+    "timestamp": "2026-09-11T04:14:52",
+    "track_id": 67,
+    "event_type": "virtual_fence_crossing",
+    "direction": "inbound",
+    "off_hours": true,
+    "risk_score": 40,
+    "severity": "High",
+    "snapshot": "snapshots/track67_1789080292.jpg"
+  },
+  {
+    "timestamp": "2026-09-11T04:14:56",
+    "track_id": 93,
     "event_type": "virtual_fence_crossing",
     "direction": "outbound",
     "off_hours": true,
     "risk_score": 40,
     "severity": "High",
-    "snapshot": "snapshots/track103_1788960670.jpg"
+    "snapshot": "snapshots/track93_1789080296.jpg"
   },
   {
-    "timestamp": "2026-09-09T19:01:17",
-    "track_id": 43,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track43_1788960677.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T19:01:52",
-    "track_id": 192,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track192_1788960712.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T19:02:05",
-    "track_id": 205,
+    "timestamp": "2026-09-11T04:14:57",
+    "track_id": 85,
     "event_type": "virtual_fence_crossing",
     "direction": "outbound",
     "off_hours": true,
     "risk_score": 40,
     "severity": "High",
-    "snapshot": "snapshots/track205_1788960725.jpg"
+    "snapshot": "snapshots/track85_1789080297.jpg"
   },
   {
-    "timestamp": "2026-09-09T21:51:32",
-    "track_id": 3,
+    "timestamp": "2026-09-11T04:15:07",
+    "track_id": 83,
     "event_type": "virtual_fence_crossing",
     "direction": "inbound",
     "off_hours": true,
     "risk_score": 40,
     "severity": "High",
-    "snapshot": "snapshots/track3_1788970892.jpg"
+    "snapshot": "snapshots/track83_1789080307.jpg"
   },
   {
-    "timestamp": "2026-09-09T21:52:03",
-    "track_id": 42,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track42_1788970923.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T21:52:06",
-    "track_id": 102,
+    "timestamp": "2026-09-11T04:15:23",
+    "track_id": 158,
     "event_type": "virtual_fence_crossing",
     "direction": "outbound",
     "off_hours": true,
     "risk_score": 40,
     "severity": "High",
-    "snapshot": "snapshots/track102_1788970926.jpg"
+    "snapshot": "snapshots/track158_1789080323.jpg"
   },
   {
-    "timestamp": "2026-09-09T21:52:07",
-    "track_id": 164,
+    "timestamp": "2026-09-11T04:15:24",
+    "track_id": 210,
     "event_type": "virtual_fence_crossing",
     "direction": "outbound",
     "off_hours": true,
     "risk_score": 40,
     "severity": "High",
-    "snapshot": "snapshots/track164_1788970927.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T21:52:13",
-    "track_id": 75,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track75_1788970933.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T21:52:17",
-    "track_id": 191,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track191_1788970937.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T21:52:30",
-    "track_id": 203,
-    "event_type": "virtual_fence_crossing",
-    "direction": "outbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track203_1788970950.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T21:54:34",
-    "track_id": 3,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track3_1788971074.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T21:55:02",
-    "track_id": 102,
-    "event_type": "virtual_fence_crossing",
-    "direction": "outbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track102_1788971102.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T21:55:04",
-    "track_id": 42,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track42_1788971104.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T21:55:18",
-    "track_id": 191,
-    "event_type": "virtual_fence_crossing",
-    "direction": "inbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track191_1788971118.jpg"
-  },
-  {
-    "timestamp": "2026-09-09T21:55:24",
-    "track_id": 203,
-    "event_type": "virtual_fence_crossing",
-    "direction": "outbound",
-    "off_hours": true,
-    "risk_score": 40,
-    "severity": "High",
-    "snapshot": "snapshots/track203_1788971124.jpg"
+    "snapshot": "snapshots/track210_1789080324.jpg"
   }
 ]

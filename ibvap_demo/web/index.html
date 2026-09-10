@@ -35,10 +35,11 @@
 
 <script>
 async function refresh() {
-  document.getElementById("frame").src = "latest_frame.jpg?t=" + Date.now();
+  const frameImg = document.getElementById("frame");
+  frameImg.src = "latest_frame.jpg?t=" + Date.now();
 
   try {
-    const res = await fetch("alerts.json?t=" + Date.now());
+    const res = await fetch("alerts.json?t=" + Date.now(), { cache: "no-store" });
     const alerts = await res.json();
     const list = document.getElementById("alertList");
     if (!alerts.length) {
@@ -46,7 +47,7 @@ async function refresh() {
     } else {
       list.innerHTML = alerts.slice().reverse().map(a => `
         <div class="alert ${a.severity}">
-          <div><strong>${a.severity}</strong> — ${a.event_type.replace(/_/g, " ")}</div>
+          <div><strong>${a.severity}</strong> ${a.event_type.replace(/_/g, " ")}</div>
           <div class="meta">track #${a.track_id} · ${a.direction} · ${a.timestamp}</div>
           <div class="meta">risk score: ${a.risk_score}${a.off_hours ? " (off-hours)" : ""}</div>
         </div>
@@ -55,7 +56,7 @@ async function refresh() {
   } catch (e) { /* alerts.json not created yet — fine, keep waiting */ }
 
   try {
-    const res2 = await fetch("detections.json?t=" + Date.now());
+    const res2 = await fetch("detections.json?t=" + Date.now(), { cache: "no-store" });
     const detections = await res2.json();
     const list2 = document.getElementById("detectionList");
     if (!detections.length) {
@@ -70,7 +71,7 @@ async function refresh() {
     }
   } catch (e) { /* detections.json not created yet — fine, keep waiting */ }
 }
-setInterval(refresh, 2000);
+setInterval(refresh, 1000);
 refresh();
 </script>
 </body>
