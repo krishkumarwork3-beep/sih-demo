@@ -1,0 +1,19 @@
+# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+
+# Custom ByteTrack settings for the IBVAP demo — tuned to keep a track's ID
+# through brief occlusions (walking behind a car/pole/other person, an
+# umbrella covering the face, etc.) instead of the camera "losing" the
+# person and assigning them a brand-new ID a moment later.
+#
+# The default track_buffer is 30 frames (~1s at 30fps). If someone is
+# blocked from view for longer than that, ByteTrack gives up on the old
+# track and starts a new one on re-appearance — which is exactly the
+# "id changes at the fence" symptom.
+
+tracker_type: bytetrack
+track_high_thresh: 0.25
+track_low_thresh: 0.1
+new_track_thresh: 0.25
+track_buffer: 90       # was 30 — keep a lost track "alive" for ~3s instead of ~1s
+match_thresh: 0.85     # was 0.8 — a bit more lenient when re-matching after a gap
+fuse_score: True
