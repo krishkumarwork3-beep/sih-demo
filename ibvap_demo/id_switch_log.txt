@@ -1,0 +1,47 @@
+[frame 66] possible ID switch: #23 (conf 0.40) vanished 1.10s ago -> new #32 (conf 0.39) appeared 68px away, class=person
+[frame 72] possible ID switch: #28 (conf 0.18) vanished 0.37s ago -> new #36 (conf 0.29) appeared 32px away, class=vehicle
+[frame 74] possible IDENTITY SWAP: #32 (height ratio 1.59x (246px -> 392px)) — this id may now be tracking a different person than a moment ago.
+[frame 80] possible ID switch: #15 (conf 0.14) vanished 1.55s ago -> new #39 (conf 0.30) appeared 18px away, class=person
+[frame 90] possible ID switch: #9 (conf 0.12) vanished 2.03s ago -> new #42 (conf 0.34) appeared 16px away, class=vehicle
+[frame 98] possible ID switch: #20 (conf 0.19) vanished 0.41s ago -> new #45 (conf 0.39) appeared 40px away, class=vehicle
+[frame 104] possible ID switch: #41 (conf 0.53) vanished 0.45s ago -> new #49 (conf 0.55) appeared 96px away, class=vehicle
+[frame 125] possible ID switch: #57 (conf 0.31) vanished 0.12s ago -> new #61 (conf 0.40) appeared 18px away, class=person
+[frame 128] possible ID switch: #57 (conf 0.31) vanished 0.24s ago -> new #62 (conf 0.27) appeared 15px away, class=person
+[frame 143] possible ID switch: #4 (conf 0.10) vanished 1.26s ago -> new #72 (conf 0.45) appeared 15px away, class=vehicle
+[frame 152] possible ID switch: #42 (conf 0.14) vanished 1.46s ago -> new #78 (conf 0.58) appeared 35px away, class=vehicle
+[frame 153] possible ID switch: #75 (conf 0.57) vanished 0.16s ago -> new #79 (conf 0.58) appeared 9px away, class=vehicle
+[frame 158] possible ID switch: #63 (conf 0.48) vanished 0.24s ago -> new #80 (conf 0.45) appeared 42px away, class=vehicle
+[frame 165] possible ID switch: #80 (conf 0.48) vanished 0.16s ago -> new #84 (conf 0.51) appeared 26px away, class=vehicle
+[frame 166] possible ID switch: #79 (conf 0.62) vanished 0.41s ago -> new #85 (conf 0.44) appeared 16px away, class=vehicle
+[frame 170] possible ID switch: #84 (conf 0.51) vanished 0.20s ago -> new #86 (conf 0.42) appeared 40px away, class=vehicle
+[frame 174] possible ID switch: #86 (conf 0.42) vanished 0.16s ago -> new #88 (conf 0.45) appeared 29px away, class=vehicle
+[frame 174] possible ID switch: #85 (conf 0.46) vanished 0.20s ago -> new #89 (conf 0.40) appeared 7px away, class=vehicle
+[frame 178] possible IDENTITY SWAP: #46 (appearance similarity 0.31) — this id may now be tracking a different person than a moment ago.
+[frame 179] possible IDENTITY SWAP: #32 (height ratio 0.69x (101px -> 70px)) — this id may now be tracking a different person than a moment ago. Cleared its red 'already crossed' flag.
+[frame 179] possible ID switch: #61 (conf 0.25) vanished 1.67s ago -> new #93 (conf 0.56) appeared 117px away, class=person
+[frame 181] possible ID switch: #61 (conf 0.25) vanished 1.75s ago -> new #96 (conf 0.53) appeared 51px away, class=person
+[frame 181] possible ID switch: #88 (conf 0.43) vanished 0.24s ago -> new #97 (conf 0.37) appeared 112px away, class=vehicle
+[frame 184] possible ID switch: #64 (conf 0.40) vanished 2.03s ago -> new #99 (conf 0.34) appeared 84px away, class=person
+[frame 192] possible IDENTITY SWAP: #44 (appearance similarity 0.28) — this id may now be tracking a different person than a moment ago.
+[frame 193] possible ID switch: #89 (conf 0.24) vanished 0.28s ago -> new #106 (conf 0.47) appeared 11px away, class=vehicle
+[frame 194] possible ID switch: #29 (conf 0.10) vanished 1.99s ago -> new #110 (conf 0.32) appeared 30px away, class=person
+[frame 194] possible ID switch: #39 (conf 0.25) vanished 0.08s ago -> new #111 (conf 0.32) appeared 24px away, class=person
+[frame 204] possible ID switch: #93 (conf 0.11) vanished 0.49s ago -> new #118 (conf 0.42) appeared 40px away, class=person
+[frame 210] possible ID switch: #76 (conf 0.12) vanished 0.20s ago -> new #122 (conf 0.29) appeared 83px away, class=person
+[frame 211] possible ID switch: #29 (conf 0.10) vanished 2.69s ago -> new #123 (conf 0.32) appeared 14px away, class=person
+[frame 213] possible ID switch: #13 (conf 0.12) vanished 0.12s ago -> new #125 (conf 0.55) appeared 84px away, class=person
+[frame 213] possible ID switch: #29 (conf 0.10) vanished 2.77s ago -> new #126 (conf 0.32) appeared 79px away, class=person
+[frame 215] possible ID switch: #72 (conf 0.11) vanished 0.12s ago -> new #127 (conf 0.32) appeared 45px away, class=vehicle
+[frame 223] possible ID switch: #93 (conf 0.11) vanished 1.26s ago -> new #133 (conf 0.37) appeared 14px away, class=person
+[frame 224] possible ID switch: #111 (conf 0.31) vanished 1.10s ago -> new #134 (conf 0.45) appeared 120px away, class=person
+[frame 228] possible ID switch: #104 (conf 0.20) vanished 0.33s ago -> new #135 (conf 0.32) appeared 14px away, class=person
+[frame 230] possible ID switch: #13 (conf 0.12) vanished 0.81s ago -> new #136 (conf 0.53) appeared 96px away, class=person
+[frame 231] possible IDENTITY SWAP: #69 (appearance similarity 0.20) — this id may now be tracking a different person than a moment ago.
+[frame 235] possible ID switch: #90 (conf 0.10) vanished 1.30s ago -> new #138 (conf 0.33) appeared 67px away, class=person
+[frame 239] possible IDENTITY SWAP: #130 (height ratio 1.46x (233px -> 341px)) — this id may now be tracking a different person than a moment ago.
+[frame 239] possible ID switch: #52 (conf 0.50) vanished 1.10s ago -> new #139 (conf 0.45) appeared 39px away, class=vehicle
+[frame 241] possible ID switch: #121 (conf 0.11) vanished 0.98s ago -> new #144 (conf 0.25) appeared 78px away, class=vehicle
+[frame 241] possible ID switch: #93 (conf 0.11) vanished 1.99s ago -> new #145 (conf 0.37) appeared 24px away, class=person
+[frame 245] possible ID switch: #139 (conf 0.46) vanished 0.04s ago -> new #147 (conf 0.26) appeared 23px away, class=vehicle
+[frame 246] possible ID switch: #121 (conf 0.11) vanished 1.18s ago -> new #149 (conf 0.26) appeared 15px away, class=vehicle
+[frame 252] possible ID switch: #25 (conf 0.40) vanished 2.24s ago -> new #153 (conf 0.66) appeared 107px away, class=person
